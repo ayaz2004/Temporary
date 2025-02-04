@@ -1,4 +1,3 @@
-import e from "express";
 import mongoose from "mongoose";
 
 export const wasteType = {
@@ -6,28 +5,25 @@ export const wasteType = {
   Plastic: "Plastic",
   Metal: "Metal",
   Glass: "Glass",
-
-}
+};
 const productSchema = new mongoose.Schema(
   {
-    userId:{
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
     images: {
       type: [String],
- 
     },
     category: {
       type: String,
-      enum:wasteType,
+      enum: wasteType,
       default: wasteType.Metal,
       required: true,
     },
     quantity: {
       type: String,
       required: true,
-     
     },
     price: {
       type: Number,
@@ -37,7 +33,6 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    
   },
   { timestamps: true }
 );

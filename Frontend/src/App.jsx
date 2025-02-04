@@ -7,11 +7,13 @@ import SignUp from "./pages/SignUp";
 import Header from "./components/Header";
 
 import "leaflet/dist/leaflet.css";
+import Product from "./pages/Product";
+import ProductDetails from "./pages/ProductDetails";
+
 export default function App() {
   return (
     <>
       {/* Leaflet Map */}
-
 
       {/* React Router */}
       <BrowserRouter>
@@ -22,6 +24,8 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/product" element={<Product />} />
+          <Route path="/product/:productId" element={<ProductDetails />} />
         </Routes>
       </BrowserRouter>
     </>
