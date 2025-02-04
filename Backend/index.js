@@ -3,9 +3,10 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
+import { getBrowser } from "./utils/puppeter.js";
 
 dotenv.config();
-
+// getBrowser();
 mongoose
   .connect(process.env.MONGODB_URL)
   .then(() => {

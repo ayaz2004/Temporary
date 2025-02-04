@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import {
   FaStar,
   FaMapMarkerAlt,
@@ -11,8 +11,15 @@ import {
 import { MdEco } from "react-icons/md";
 import { Card, Button, TextInput, Badge, Dropdown } from "flowbite-react";
 import "leaflet/dist/leaflet.css";
-import { Marker, Popup, TileLayer, MapContainer } from "react-leaflet";
+import {
+  Marker,
+  Popup,
+  TileLayer,
+  MapContainer,
+  Polyline,
+} from "react-leaflet";
 import { icon } from "leaflet";
+import { coordinatesAndTimeStamp } from "../coordinateResponse/reponse";
 
 const customIcon = icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
@@ -21,12 +28,30 @@ const customIcon = icon({
   iconAnchor: [12, 41],
 });
 
+
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [wasteFilter, setWasteFilter] = useState("all");
   const [sortBy, setSortBy] = useState("rating");
   const [favorites, setFavorites] = useState(new Set());
-
+  const [coordinates, setCoordinates] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    const fetchCoordinates = async () => {
+      try {
+        const data = await coordinatesAndTimeStamp();
+       console.log(data)
+        setCoordinates(data.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchCoordinates();
+  }, []);
   const vendors = [
     {
       id: 1,
@@ -101,7 +126,13 @@ const Home = () => {
       return 0;
     });
 
-  const defaultCenter = [51.505, -0.09];
+    const routeCoordinates = coordinates.map((coord) => [
+      parseFloat(coord.latitude),
+      parseFloat(coord.longitude),
+    ]);
+    const defaultCenter = coordinates[0] 
+    ? [parseFloat(coordinates[0].latitude), parseFloat(coordinates[0].longitude)]
+    : [28.563878, 77.167651];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-green-900 to-teal-900">
@@ -118,7 +149,7 @@ const Home = () => {
         </div>
       </div> */}
 
-      <div className="h-[400px] w-full mb-8 rounded-lg overflow-hidden shadow-lg">
+      {/* <div className="h-[400px] w-full mb-8 rounded-lg overflow-hidden shadow-lg">
         <MapContainer
           center={defaultCenter}
           zoom={13}
@@ -144,7 +175,55 @@ const Home = () => {
             </Marker>
           ))}
         </MapContainer>
+      </div> */}
+      {/* Map Section */}
+      <div className="h-[400px] w-full mb-8 rounded-lg overflow-hidden shadow-lg">
+        {loading ? (
+          <div className="h-full flex items-center justify-center bg-gray-800">
+            <p className="text-white">Loading map data...</p>
+          </div>
+        ) : error ? (
+          <div className="h-full flex items-center justify-center bg-gray-800">
+            <p className="text-red-500">Error: {error}</p>
+          </div>
+        ) : (
+          <MapContainer
+            center={defaultCenter}
+            zoom={16}
+            style={{ height: "100%", width: "100%" }}
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            />
+
+            <Polyline
+              positions={routeCoordinates}
+              color="red"
+              weight={5}
+              opacity={0.9}
+            />
+
+            {/* {coordinates.map((coord, index) => (
+              <Marker
+                key={index}
+                position={[
+                  parseFloat(coord.latitude),
+                  parseFloat(coord.longitude),
+                ]}
+              >
+                <Popup>
+                  <div className="p-2">
+                    <h3 className="font-bold">Point {index + 1}</h3>
+                    <p>Time: {coord.stamp}</p>
+                  </div>
+                </Popup>
+              </Marker>
+            ))} */}
+          </MapContainer>
+        )}
       </div>
+
 
       {/* Search and Filter Section */}
       <div className="max-w-7xl mx-auto px-4 -mt-8 relative z-10">
@@ -194,8 +273,7 @@ const Home = () => {
               key={vendor.id}
               className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gray-800 border-green-500/30"
               imgSrc={vendor.image}
-              horizontal={false}
-            >
+              horizontal={false}>
               {vendor.featured && (
                 <Badge color="success" className="absolute top-4 right-4">
                   Verified
@@ -205,8 +283,7 @@ const Home = () => {
                 <Button
                   color={favorites.has(vendor.id) ? "failure" : "gray"}
                   className="absolute top-4 right-4 rounded-full p-2"
-                  onClick={() => toggleFavorite(vendor.id)}
-                >
+                  onClick={() => toggleFavorite(vendor.id)}>
                   <FaHeart
                     className={
                       favorites.has(vendor.id)
@@ -251,8 +328,7 @@ const Home = () => {
                       <Badge
                         key={index}
                         color="success"
-                        className="bg-opacity-50"
-                      >
+                        className="bg-opacity-50">
                         <FaRecycle className="mr-1" />
                         {type}
                       </Badge>
