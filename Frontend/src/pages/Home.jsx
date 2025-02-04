@@ -10,6 +10,16 @@ import {
 } from "react-icons/fa";
 import { MdEco } from "react-icons/md";
 import { Card, Button, TextInput, Badge, Dropdown } from "flowbite-react";
+import "leaflet/dist/leaflet.css";
+import { Marker, Popup, TileLayer, MapContainer } from "react-leaflet";
+import { icon } from "leaflet";
+
+const customIcon = icon({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -91,10 +101,12 @@ const Home = () => {
       return 0;
     });
 
+  const defaultCenter = [51.505, -0.09];
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-green-900 to-teal-900">
       {/* Map Section */}
-      <div className="h-[50vh] relative transition-all duration-500 bg-gray-800">
+      {/* <div className="h-[50vh] relative transition-all duration-500 bg-gray-800">
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg border border-green-500">
@@ -104,6 +116,34 @@ const Home = () => {
             </p>
           </div>
         </div>
+      </div> */}
+
+      <div className="h-[400px] w-full mb-8 rounded-lg overflow-hidden shadow-lg">
+        <MapContainer
+          center={defaultCenter}
+          zoom={13}
+          style={{ height: "100%", width: "100%" }}
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          />
+          {vendors.map((vendor) => (
+            <Marker
+              key={vendor.id}
+              position={defaultCenter} // Replace with actual vendor coordinates
+              icon={customIcon}
+            >
+              <Popup>
+                <div className="p-2">
+                  <h3 className="font-bold">{vendor.name}</h3>
+                  <p>{vendor.specialization}</p>
+                  <p>⭐ {vendor.rating}</p>
+                </div>
+              </Popup>
+            </Marker>
+          ))}
+        </MapContainer>
       </div>
 
       {/* Search and Filter Section */}
