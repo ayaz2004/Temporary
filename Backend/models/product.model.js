@@ -6,6 +6,7 @@ export const wasteType = {
   Metal: "Metal",
   Glass: "Glass",
 };
+
 const productSchema = new mongoose.Schema(
   {
     userId: {

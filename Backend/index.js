@@ -2,7 +2,6 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
-
 dotenv.config();
 
 mongoose
@@ -23,12 +22,16 @@ app.listen(3000, () => {
 
 import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
-import productRoute from "./routes/product.route.js"
+import productRoute from "./routes/product.route.js";
+import vendorRoute from "./routes/vendor.route.js";
+
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
+
 // product
 app.use("/api/product", productRoute);
 
+app.use("/api/vendor", vendorRoute);
 
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode || 500;

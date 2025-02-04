@@ -99,9 +99,9 @@ export default function Product() {
             <Card
               key={product._id}
               className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gray-800 border-green-500/30"
-              imgSrc={
-                product.images[0] || "https://via.placeholder.com/400x250"
-              }
+              // imgSrc={
+              //   product.images[0] || "https://via.placeholder.com/400x250"
+              // }
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
