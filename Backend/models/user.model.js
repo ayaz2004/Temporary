@@ -16,10 +16,40 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    profilePicture: {
+    role: {
       type: String,
-      default:
-        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+      enum: ["user", "vendor", "admin"],
+      default: "user",
+    },
+    approvedUser: {
+      type: Boolean,
+      default: false,
+    },
+    workArea: { type: String }, // Example: "South Delhi"
+    vehicleNumber: { type: String }, // If using a vehicle
+    collectedWaste: [
+      {
+        wasteType: String,
+        quantity: Number,
+        collectedAt: { type: Date, default: Date.now },
+      },
+    ],
+    ratings: { type: Number, default: 0 }, // Average user rating
+    completedRequests: { type: Number, default: 0 },
+    cancelledRequests: { type: Number, default: 0 },
+    adharNo: {
+      type: String,
+    },
+    location: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        required: true,
+      },
+      coordinates: {
+        type: [Number],
+        required: true,
+      },
     },
   },
   { timestamps: true }

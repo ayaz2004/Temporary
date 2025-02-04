@@ -2,39 +2,64 @@ import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import { errorHanler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
+import ApiResponse from "../utils/ApiRresponse.js";
 
 export const signup = async (req, res, next) => {
-  const { username, email, password } = req.body;
-
-  if (
-    !username ||
-    !email ||
-    !password ||
-    username === "" ||
-    email === "" ||
-    password === ""
-  ) {
-    next(errorHanler(400, "All fields are required"));
-  }
-
-  const hashedPassword = bcryptjs.hashSync(password, 10);
-
-  const newUser = new User({
-    username,
-    email,
-    password: hashedPassword,
-  });
-
   try {
+    const {
+      username,
+      email,
+      password,
+      role,
+      workArea,
+      vehicleNumber,
+      adharNo,
+    } = req.body;
+
+    if (!username || !email || !password) {
+      return next(errorHanler(400, "All fields are required"));
+    }
+
+    // Hash Password
+    const hashedPassword = bcryptjs.hashSync(password, 10);
+
+    // Create User Object
+  
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+      role: role || "user",
+      approvedUser: role === "vendor" ? false : true,
+      workArea: role === "vendor" ? workArea : undefined, // Required for vendors
+      vehicleNumber: role === "vendor" ? vehicleNumber : undefined,
+      adharNo: role === "vendor" ? adharNo : undefined,
+    });
+    if (!workArea && role === "vendor" || !adharNo && role === "vendor") {
+      return next(errorHanler(400, `work area and adhar no is required for vendors`));
+    }
+    
+
+    // Save User
     await newUser.save();
-    res.json("Signup successful");
+
+    res
+      .status(201)
+      .json(
+        new ApiResponse(
+          201,
+          "Signup successful. Waiting for approval",
+          newUser.username
+        )
+      );
   } catch (error) {
-    next(error);
+    next(errorHanler(500, error.message));
   }
 };
 
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
+  console.log(req.body);
 
   if (!email || !password || email === "" || password === "") {
     next(errorHanler(400, "All fields are required"));
