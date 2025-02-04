@@ -7,7 +7,9 @@ import SignUp from "./pages/SignUp";
 import Header from "./components/Header";
 
 import "leaflet/dist/leaflet.css";
+import { getCoordinates } from "../api";
 export default function App() {
+  getCoordinates();
   return (
     <>
       {/* Leaflet Map */}
