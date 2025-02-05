@@ -24,7 +24,7 @@ const Home = () => {
     const fetchCoordinates = async () => {
       try {
         const data = await coordinatesAndTimeStamp();
-       console.log(data)
+    
         setCoordinates(data.data);
       } catch (err) {
         setError(err.message);
@@ -176,7 +176,7 @@ const Home = () => {
             <Polyline
               positions={routeCoordinates}
               color="red"
-              weight={5}
+              weight={6}
               opacity={0.9}
             />
 
