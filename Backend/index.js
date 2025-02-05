@@ -2,8 +2,10 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
-dotenv.config();
+import { getBrowser } from "./utils/puppeter.js";
 
+dotenv.config();
+// getBrowser();
 mongoose
   .connect(process.env.MONGODB_URL)
   .then(() => {

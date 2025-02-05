@@ -3,15 +3,41 @@ import { FaStar, FaHeart, FaTruck } from "react-icons/fa";
 import { Card, Button, Badge, Spinner } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import VendorList from "../components/VendorList";
+import {
+  Marker,
+  Popup,
+  TileLayer,
+  MapContainer,
+  Polyline,
+} from "react-leaflet";
+import { icon } from "leaflet";
+import { coordinatesAndTimeStamp } from "../coordinateResponse/reponse";
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [wasteFilter, setWasteFilter] = useState("all");
   const [sortBy, setSortBy] = useState("rating");
   const [favorites, setFavorites] = useState(new Set());
-  const [vendors, setVendors] = useState([]);
+  const [coordinates, setCoordinates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  useEffect(() => {
+    const fetchCoordinates = async () => {
+      try {
+        const data = await coordinatesAndTimeStamp();
+
+        setCoordinates(data.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCoordinates();
+  }, []);
+  const [vendors, setVendors] = useState([]);
+
   const navigate = useNavigate();
 
   // Fetch vendors from backend API
@@ -57,6 +83,17 @@ const Home = () => {
       return 0;
     });
 
+  const routeCoordinates = coordinates.map((coord) => [
+    parseFloat(coord.latitude),
+    parseFloat(coord.longitude),
+  ]);
+  const defaultCenter = coordinates[0]
+    ? [
+        parseFloat(coordinates[0].latitude),
+        parseFloat(coordinates[0].longitude),
+      ]
+    : [28.563878, 77.167651];
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-900 via-green-900 to-teal-900 flex items-center justify-center">
@@ -81,7 +118,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-green-900 to-teal-900">
       {/* Map Section */}
-      <div className="h-[50vh] relative transition-all duration-500 bg-gray-800">
+      {/* <div className="h-[50vh] relative transition-all duration-500 bg-gray-800">
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg border border-green-500">
@@ -91,6 +128,81 @@ const Home = () => {
             </p>
           </div>
         </div>
+      </div> */}
+
+      {/* <div className="h-[400px] w-full mb-8 rounded-lg overflow-hidden shadow-lg">
+        <MapContainer
+          center={defaultCenter}
+          zoom={13}
+          style={{ height: "100%", width: "100%" }}
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          />
+          {vendors.map((vendor) => (
+            <Marker
+              key={vendor.id}
+              position={defaultCenter} // Replace with actual vendor coordinates
+              icon={customIcon}
+            >
+              <Popup>
+                <div className="p-2">
+                  <h3 className="font-bold">{vendor.name}</h3>
+                  <p>{vendor.specialization}</p>
+                  <p>⭐ {vendor.rating}</p>
+                </div>
+              </Popup>
+            </Marker>
+          ))}
+        </MapContainer>
+      </div> */}
+      {/* Map Section */}
+      <div className="h-[400px] w-full mb-8 rounded-lg overflow-hidden shadow-lg">
+        {loading ? (
+          <div className="h-full flex items-center justify-center bg-gray-800">
+            <p className="text-white">Loading map data...</p>
+          </div>
+        ) : error ? (
+          <div className="h-full flex items-center justify-center bg-gray-800">
+            <p className="text-red-500">Error: {error}</p>
+          </div>
+        ) : (
+          <MapContainer
+            center={defaultCenter}
+            zoom={16}
+            style={{ height: "100%", width: "100%" }}
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            />
+
+            <Polyline
+              positions={routeCoordinates}
+              color="red"
+              weight={6}
+              opacity={0.9}
+            />
+
+            {/* {coordinates.map((coord, index) => (
+              <Marker
+                key={index}
+                position={[
+                  parseFloat(coord.latitude),
+                  parseFloat(coord.longitude),
+                ]}
+              >
+                <Popup>
+                  <div className="p-2">
+                    <h3 className="font-bold">Point {index + 1}</h3>
+                    <p>Time: {coord.stamp}</p>
+                  </div>
+                </Popup>
+              </Marker>
+            ))} */}
+          </MapContainer>
+        )}
       </div>
 
       {/* Search and Filter Section */}
