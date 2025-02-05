@@ -9,6 +9,7 @@ import Header from "./components/Header";
 import "leaflet/dist/leaflet.css";
 import Product from "./pages/Product";
 import ProductDetails from "./pages/ProductDetails";
+import VendorDetails from "./pages/VendorDetails";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/product" element={<Product />} />
           <Route path="/product/:productId" element={<ProductDetails />} />
+          <Route path="/vendor/:vendorId" element={<VendorDetails />} />
         </Routes>
       </BrowserRouter>
     </>

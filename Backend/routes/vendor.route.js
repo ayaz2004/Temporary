@@ -9,6 +9,6 @@ const router = Router();
 
 router.post("/addVendor", addVendor);
 router.get("/getAllVendors", getAllVendors);
-router.get("getVendor/:vendorId", getVendorById);
+router.get("/getVendor/:vendorId", getVendorById);
 
 export default router;

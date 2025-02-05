@@ -9,59 +9,48 @@ export const wasteType = {
 
 const vendorSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
+    // Basic Info
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
+    image: { type: [String] },
+    address: { type: String, required: true },
+    coordinates: {
+      latitude: { type: Number },
+      longitude: { type: Number },
     },
-    rating: {
-      type: Number,
-      required: true,
-    },
-    reviews: {
-      type: Number,
-      required: true,
-    },
-    distance: {
-      type: String,
-      required: true,
-    },
-    availableTime: {
-      type: String,
-      required: true,
-    },
-    phone: {
-      type: String,
-      required: true,
-    },
-    image: {
-      type: [String],
-    },
-    specialization: {
-      type: String,
-      required: true,
-    },
-    price: {
-      type: String,
-      required: true,
-    },
-    responseTime: {
-      type: String,
-      required: true,
-    },
-    certifications: {
-      type: [String],
-      required: true,
-    },
-    category: {
-      type: String,
-      enum: wasteType,
-      default: wasteType.Metal,
-      required: true,
-    },
-    featured: {
-      type: Boolean,
-      default: false,
-    },
+
+    // Business Details
+    businessLicense: { type: String, required: true },
+    establishedYear: { type: Number },
+    operatingAreas: [String],
+    wasteTypes: [{ type: String, enum: Object.values(wasteType) }],
+    specialization: { type: String, required: true },
+
+    // Service Details
+    availableTime: { type: String, required: true },
+    responseTime: { type: String, required: true },
+    price: { type: String, required: true },
+    minimumWeight: { type: Number },
+    maximumWeight: { type: Number },
+    servicesOffered: [String],
+
+    // Certifications & Compliance
+    certifications: { type: [String], required: true },
+    environmentalCompliance: { type: Boolean, default: false },
+    safetyStandards: [String],
+
+    // Performance Metrics
+    rating: { type: Number, required: true, default: 0 },
+    reviews: { type: Number, required: true, default: 0 },
+    distance: { type: String, required: true },
+    completedPickups: { type: Number, default: 0 },
+    featured: { type: Boolean, default: false },
+
+    // Equipment & Capacity
+    vehicleTypes: [String],
+    processingCapacity: { type: String },
+    recyclingMethods: [String],
   },
   { timestamps: true }
 );
