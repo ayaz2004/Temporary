@@ -35,8 +35,7 @@ const Home = () => {
     
     fetchCoordinates();
   }, []);  const [vendors, setVendors] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+
   const navigate = useNavigate();
 
   // Fetch vendors from backend API
