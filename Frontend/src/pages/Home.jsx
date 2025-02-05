@@ -1,15 +1,7 @@
 import { useState, useEffect } from "react";
-import { FaStar, FaHeart, FaTruck } from "react-icons/fa";
-import { Card, Button, Badge, Spinner } from "flowbite-react";
-import { useNavigate } from "react-router-dom";
+import { Button, Spinner } from "flowbite-react";
 import VendorList from "../components/VendorList";
-import {
-  Marker,
-  Popup,
-  TileLayer,
-  MapContainer,
-  Polyline,
-} from "react-leaflet";
+import { TileLayer, MapContainer, Polyline } from "react-leaflet";
 import { icon } from "leaflet";
 import { coordinatesAndTimeStamp } from "../coordinateResponse/reponse";
 
@@ -37,8 +29,6 @@ const Home = () => {
     fetchCoordinates();
   }, []);
   const [vendors, setVendors] = useState([]);
-
-  const navigate = useNavigate();
 
   // Fetch vendors from backend API
   useEffect(() => {
