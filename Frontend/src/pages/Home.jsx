@@ -6,6 +6,7 @@ import VendorList from "../components/VendorList";
 import { TileLayer, MapContainer, Polyline } from "react-leaflet";
 import { icon } from "leaflet";
 import { coordinatesAndTimeStamp } from "../coordinateResponse/reponse";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,6 +16,8 @@ const Home = () => {
   const [coordinates, setCoordinates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchCoordinates = async () => {
       try {
