@@ -24,7 +24,7 @@ export const signup = async (req, res, next) => {
     const hashedPassword = bcryptjs.hashSync(password, 10);
 
     // Create User Object
-  
+
     const newUser = new User({
       username,
       email,
@@ -35,10 +35,11 @@ export const signup = async (req, res, next) => {
       vehicleNumber: role === "vendor" ? vehicleNumber : undefined,
       adharNo: role === "vendor" ? adharNo : undefined,
     });
-    if (!workArea && role === "vendor" || !adharNo && role === "vendor") {
-      return next(errorHanler(400, `work area and adhar no is required for vendors`));
+    if ((!workArea && role === "vendor") || (!adharNo && role === "vendor")) {
+      return next(
+        errorHanler(400, `work area and adhar no is required for vendors`)
+      );
     }
-    
 
     // Save User
     await newUser.save();
@@ -47,7 +48,7 @@ export const signup = async (req, res, next) => {
       .status(201)
       .json(
         new ApiResponse(
-          201,
+          200,
           "Signup successful. Waiting for approval",
           newUser.username
         )

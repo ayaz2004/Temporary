@@ -11,6 +11,7 @@ import Product from "./pages/Product";
 import ProductDetails from "./pages/ProductDetails";
 import VendorDetails from "./pages/VendorDetails";
 import FooterCom from "./components/Footer";
+import AIModel from "./pages/AIModel";
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/product" element={<Product />} />
           <Route path="/product/:productId" element={<ProductDetails />} />
           <Route path="/vendor/:vendorId" element={<VendorDetails />} />
+          <Route path="AIModel" element={<AIModel />} />
         </Routes>
         <FooterCom />
       </BrowserRouter>
