@@ -23,8 +23,8 @@ const AIModel = () => {
     const icons = {
       biodegradable: FaLeaf,
       clothes: FaTshirt,
-      electronics: FaMicrochip,
-      glasses: FaGlasses,
+      electronic: FaMicrochip,
+      glass: FaGlasses,
       null: FaQuestion,
       paper: FaFileAlt,
       plastic: FaRecycle,
