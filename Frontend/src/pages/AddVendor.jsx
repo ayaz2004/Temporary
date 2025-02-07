@@ -16,12 +16,34 @@ import {
   FaUserTie,
   FaEnvelope,
   FaMoneyBillWave,
+  FaImage,
 } from "react-icons/fa";
 
 export default function AddVendor() {
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const wasteType = {
+    electronic: "electronic",
+    plastic: "plastic",
+    clothes: "clothes",
+    glass: "glass",
+    biodegradable: "biodegradable",
+    paper: "paper",
+  };
+
   const [formData, setFormData] = useState({
     name: currentUser?.username || "",
     email: currentUser?.email || "",
@@ -54,6 +76,39 @@ export default function AddVendor() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate required fields
+    const requiredFields = {
+      name: "Business Name",
+      email: "Email",
+      phone: "Phone Number",
+      address: "Business Address",
+      availableTime: "Operating Hours",
+      responseTime: "Response Time",
+      price: "Price Range",
+      wasteTypes: "Waste Types",
+    };
+
+    const missingFields = Object.entries(requiredFields).filter(
+      ([key]) =>
+        !formData[key] ||
+        (Array.isArray(formData[key]) && formData[key].length === 0)
+    );
+
+    if (missingFields.length > 0) {
+      toast.error(
+        `Please fill in all required fields: ${missingFields
+          .map(([_, label]) => label)
+          .join(", ")}`
+      );
+      return;
+    }
+
+    if (!imageFile) {
+      toast.error("Please upload a shop image");
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await fetch("/api/vendor/addVendor", {
@@ -107,7 +162,7 @@ export default function AddVendor() {
               {/* Name */}
               <div className="group">
                 <label className="text-gray-400 mb-2 block">
-                  Business Name
+                  Business Name <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <FaStore className="absolute left-3 top-3 text-green-500" />
@@ -125,7 +180,9 @@ export default function AddVendor() {
 
               {/* Phone */}
               <div className="group">
-                <label className="text-gray-400 mb-2 block">Phone Number</label>
+                <label className="text-gray-400 mb-2 block">
+                  Phone Number <span className="text-red-500">*</span>
+                </label>
                 <div className="relative">
                   <FaPhone className="absolute left-3 top-3 text-green-500" />
                   <TextInput
@@ -143,7 +200,7 @@ export default function AddVendor() {
               {/* Address */}
               <div className="col-span-2">
                 <label className="text-gray-400 mb-2 block">
-                  Business Address
+                  Business Address <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <FaMapMarkerAlt className="absolute left-3 top-3 text-green-500" />
@@ -192,7 +249,7 @@ export default function AddVendor() {
               {/* Operating Hours */}
               <div className="group">
                 <label className="text-gray-400 mb-2 block">
-                  Operating Hours
+                  Operating Hours <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <FaClock className="absolute left-3 top-3 text-green-500" />
@@ -215,7 +272,7 @@ export default function AddVendor() {
               {/* Response Time */}
               <div className="group">
                 <label className="text-gray-400 mb-2 block">
-                  Response Time
+                  Response Time <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <FaClock className="absolute left-3 top-3 text-green-500" />
@@ -234,7 +291,9 @@ export default function AddVendor() {
 
               {/* Price Range */}
               <div className="group">
-                <label className="text-gray-400 mb-2 block">Price Range</label>
+                <label className="text-gray-400 mb-2 block">
+                  Price Range <span className="text-red-500">*</span>
+                </label>
                 <div className="relative">
                   <FaMoneyBillWave className="absolute left-3 top-3 text-green-500" />
                   <TextInput
@@ -260,91 +319,84 @@ export default function AddVendor() {
             <div className="grid md:grid-cols-2 gap-6">
               {/* Waste Types */}
               <div className="group">
-                <label className="text-gray-400 mb-2 block">Waste Types</label>
-                <Select
-                  multiple
-                  value={formData.wasteTypes}
-                  onChange={(e) => {
-                    const options = [...e.target.selectedOptions];
-                    setFormData({
-                      ...formData,
-                      wasteTypes: options.map((option) => option.value),
-                    });
-                  }}
-                  className="w-full bg-gray-900/50 border-gray-700 focus:border-green-500 text-gray-200"
-                  required
-                >
-                  <option value="eWaste">E-Waste</option>
-                  <option value="Plastic">Plastic</option>
-                  <option value="Metal">Metal</option>
-                  <option value="Glass">Glass</option>
-                </Select>
-              </div>
-
-              {/* Specialization */}
-              <div className="group">
                 <label className="text-gray-400 mb-2 block">
-                  Specialization
+                  Waste Types <span className="text-red-500">*</span>
                 </label>
-                <div className="relative">
-                  <FaRecycle className="absolute left-3 top-3 text-green-500" />
-                  <TextInput
-                    type="text"
-                    value={formData.specialization}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        specialization: e.target.value,
-                      })
-                    }
-                    className="pl-10 w-full bg-gray-900/50 border-gray-700 focus:border-green-500 text-gray-200"
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  {Object.entries(wasteType).map(([key, value]) => (
+                    <label
+                      key={key}
+                      className="flex items-center space-x-2 p-2 bg-gray-900/30 rounded-lg hover:bg-gray-900/50 transition-all"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={formData.wasteTypes.includes(value)}
+                        onChange={(e) => {
+                          const updatedTypes = e.target.checked
+                            ? [...formData.wasteTypes, value]
+                            : formData.wasteTypes.filter(
+                                (type) => type !== value
+                              );
+                          setFormData({
+                            ...formData,
+                            wasteTypes: updatedTypes,
+                          });
+                        }}
+                        className="w-4 h-4 text-green-500 bg-gray-900/50 border-gray-700 rounded focus:ring-green-500"
+                      />
+                      <span className="text-gray-300">{value}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
 
-              {/* Services Offered */}
-              <div className="group">
-                <label className="text-gray-400 mb-2 block">
-                  Services Offered
-                </label>
-                <div className="relative">
-                  <FaTruck className="absolute left-3 top-3 text-green-500" />
-                  <Textarea
-                    value={formData.servicesOffered?.join(", ")}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        servicesOffered: e.target.value
-                          .split(",")
-                          .map((s) => s.trim()),
-                      })
-                    }
-                    className="pl-10 w-full bg-gray-900/50 border-gray-700 focus:border-green-500 text-gray-200"
-                    placeholder="Enter services separated by commas"
-                  />
+              {/* Right Column */}
+              <div className="space-y-6">
+                {/* Services Offered */}
+                <div className="group">
+                  <label className="text-gray-400 mb-2 block">
+                    Services Offered
+                  </label>
+                  <div className="relative">
+                    <FaTruck className="absolute left-3 top-3 text-green-500" />
+                    <Textarea
+                      value={formData.servicesOffered?.join(", ")}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          servicesOffered: e.target.value
+                            .split(",")
+                            .map((s) => s.trim()),
+                        })
+                      }
+                      className="pl-10 w-full bg-gray-900/50 border-gray-700 focus:border-green-500 text-gray-200"
+                      placeholder="Enter services separated by commas"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {/* Operating Areas */}
-              <div className="group">
-                <label className="text-gray-400 mb-2 block">
-                  Operating Areas
-                </label>
-                <div className="relative">
-                  <FaMapMarkerAlt className="absolute left-3 top-3 text-green-500" />
-                  <Textarea
-                    value={formData.operatingAreas?.join(", ")}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        operatingAreas: e.target.value
-                          .split(",")
-                          .map((s) => s.trim()),
-                      })
-                    }
-                    className="pl-10 w-full bg-gray-900/50 border-gray-700 focus:border-green-500 text-gray-200"
-                    placeholder="Enter areas separated by commas"
-                  />
+                {/* Operating Areas */}
+                <div className="group">
+                  <label className="text-gray-400 mb-2 block">
+                    Operating Areas <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <FaMapMarkerAlt className="absolute left-3 top-3 text-green-500" />
+                    <Textarea
+                      value={formData.operatingAreas?.join(", ")}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          operatingAreas: e.target.value
+                            .split(",")
+                            .map((s) => s.trim()),
+                        })
+                      }
+                      className="pl-10 w-full bg-gray-900/50 border-gray-700 focus:border-green-500 text-gray-200"
+                      placeholder="Enter areas separated by commas"
+                      required
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -498,6 +550,56 @@ export default function AddVendor() {
                   </span>
                 </label>
               </div>
+            </div>
+          </div>
+
+          {/* Shop Image Upload */}
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-green-500/20 shadow-xl">
+            <h2 className="text-xl font-semibold text-green-400 mb-4">
+              Shop Image <span className="text-red-500">*</span>
+            </h2>
+            <div className="space-y-4">
+              <div className="flex items-center justify-center">
+                {imagePreview ? (
+                  <div className="relative group">
+                    <img
+                      src={imagePreview}
+                      alt="Shop preview"
+                      className="w-64 h-64 object-cover rounded-lg border-4 border-green-500/30"
+                    />
+                    <div
+                      onClick={() => {
+                        setImageFile(null);
+                        setImagePreview(null);
+                      }}
+                      className="absolute inset-0 bg-black/50 items-center justify-center hidden group-hover:flex rounded-lg cursor-pointer"
+                    >
+                      <span className="text-white">Change Image</span>
+                    </div>
+                  </div>
+                ) : (
+                  <label className="w-64 h-64 flex flex-col items-center justify-center border-4 border-dashed border-green-500/30 rounded-lg cursor-pointer hover:border-green-500/50 transition-all">
+                    <FaImage className="w-12 h-12 text-green-500/50" />
+                    <span className="mt-2 text-gray-400">
+                      Click to upload shop image
+                    </span>
+                  </label>
+                )}
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+                id="shopImage"
+                required
+              />
+              <label
+                htmlFor="shopImage"
+                className="block w-full px-4 py-2 text-sm text-center text-gray-300 bg-green-500/20 rounded-lg cursor-pointer hover:bg-green-500/30 transition-all"
+              >
+                {imageFile ? "Change Image" : "Select Image"}
+              </label>
             </div>
           </div>
 

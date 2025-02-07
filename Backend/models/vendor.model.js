@@ -26,7 +26,7 @@ const vendorSchema = new mongoose.Schema(
     establishedYear: { type: Number },
     operatingAreas: [String],
     wasteTypes: [{ type: String, enum: Object.values(wasteType) }],
-    specialization: { type: String },
+    // specialization: { type: String },
 
     // Service Details
     availableTime: { type: String, required: true },
