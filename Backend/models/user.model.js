@@ -40,16 +40,11 @@ const userSchema = new mongoose.Schema(
     adharNo: {
       type: String,
     },
-    location: {
-      type: {
-        type: String,
-        enum: ["Point"],
-        required: true,
-      },
-      coordinates: {
-        type: [Number],
-        required: true,
-      },
+
+    coordinates: {
+      latitude: { type: Number },
+      longitude: { type: Number },
+    
     },
   },
   { timestamps: true }

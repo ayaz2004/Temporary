@@ -15,6 +15,15 @@ export default function SignUp() {
   const [formData, setFormData] = useState({
     role: "user",
   });
+  navigator.geolocation.getCurrentPosition( (position) => {
+    setFormData({
+      ...formData,
+      coordinates: {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      },
+    });
+  })
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();

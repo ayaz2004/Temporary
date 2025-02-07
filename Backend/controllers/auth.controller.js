@@ -14,8 +14,9 @@ export const signup = async (req, res, next) => {
       workArea,
       vehicleNumber,
       adharNo,
+      coordinates,
     } = req.body;
-
+console.log(req.body)
     if (!username || !email || !password) {
       return next(errorHanler(400, "All fields are required"));
     }
@@ -34,6 +35,7 @@ export const signup = async (req, res, next) => {
       workArea: role === "vendor" ? workArea : undefined, // Required for vendors
       vehicleNumber: role === "vendor" ? vehicleNumber : undefined,
       adharNo: role === "vendor" ? adharNo : undefined,
+      coordinates
     });
     if ((!workArea && role === "vendor") || (!adharNo && role === "vendor")) {
       return next(
