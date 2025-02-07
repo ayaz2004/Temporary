@@ -153,7 +153,7 @@ const Home = () => {
         </MapContainer>
       </div> */}
       {/* Map Section */}
-      <div className="h-[400px] w-full mb-8 rounded-lg overflow-hidden shadow-lg">
+      <div className="h-[400px] w-full mb-8 rounded-lg overflow-hidden shadow-lg ">
         {loading ? (
           <div className="h-full flex items-center justify-center bg-gray-800">
             <p className="text-white">Loading map data...</p>

@@ -1,11 +1,14 @@
 import { Avatar, Button, Dropdown, Navbar } from "flowbite-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { FaRecycle } from "react-icons/fa";
 
 export default function Header() {
   const path = useLocation().pathname;
+  // const dispatch = useDispatch();
+  // const navigate = useNavigate();
+
   const { currentUser } = useSelector((state) => state.user);
   return (
     <Navbar className="bg-gradient-to-r from-gray-900 via-green-900 to-teal-900 border-b border-green-500">
@@ -32,11 +35,16 @@ export default function Header() {
             arrowIcon={false}
             inline
             label={
-              <Avatar alt="user" img={currentUser.profilePicture} rounded />
+              <Avatar
+                alt="user"
+                img={currentUser.profilePicture}
+                rounded
+                className="cursor-pointer"
+              />
             }
           >
             <Dropdown.Header>
-              <span className="block text-sm">@{currentUser.username}</span>{" "}
+              <span className="block text-sm">@{currentUser.username}</span>
               <span className="block text-sm font-medium truncate">
                 {currentUser.email}
               </span>

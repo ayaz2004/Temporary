@@ -46,3 +46,22 @@
 .animate-expandWidth {
   animation: expandWidth 1s ease-out forwards;
 }
+
+.leaflet-container {
+  z-index: 1;
+}
+
+.flowbite-dropdown {
+  z-index: 9999 !important;
+}
+
+/* Override any Flowbite default z-index */
+[data-popper-placement] {
+  z-index: 9999 !important;
+}
+
+/* Ensure dropdown menu stays on top */
+.flowbite-dropdown-target {
+  position: relative;
+  z-index: 9999 !important;
+}
