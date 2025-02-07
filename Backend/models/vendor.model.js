@@ -13,7 +13,7 @@ const vendorSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, required: true },
     phone: { type: String, required: true },
-    image: { type: [String] },
+    image: { type: String },
     address: { type: String, required: true },
     coordinates: {
       latitude: { type: Number },
@@ -21,31 +21,32 @@ const vendorSchema = new mongoose.Schema(
     },
 
     // Business Details
-    businessLicense: { type: String, required: true },
+    businessLicense: { type: String },
     establishedYear: { type: Number },
     operatingAreas: [String],
     wasteTypes: [{ type: String, enum: Object.values(wasteType) }],
-    specialization: { type: String, required: true },
+    specialization: { type: String },
 
     // Service Details
     availableTime: { type: String, required: true },
     responseTime: { type: String, required: true },
     price: { type: String, required: true },
-    minimumWeight: { type: Number },
-    maximumWeight: { type: Number },
+    // minimumWeight: { type: Number },
+    // maximumWeight: { type: Number },
+    collectedWaste: { type: Number, default: 0 },
     servicesOffered: [String],
 
     // Certifications & Compliance
-    certifications: { type: [String], required: true },
-    environmentalCompliance: { type: Boolean, default: false },
+    certifications: { type: [String] },
+    environmentalCompliance: { type: Boolean },
     safetyStandards: [String],
 
     // Performance Metrics
     rating: { type: Number, required: true, default: 0 },
     reviews: { type: Number, required: true, default: 0 },
-    distance: { type: String, required: true },
+    // distance: { type: String, required: true },
     completedPickups: { type: Number, default: 0 },
-    featured: { type: Boolean, default: false },
+    // featured: { type: Boolean, default: false },
 
     // Equipment & Capacity
     vehicleTypes: [String],
