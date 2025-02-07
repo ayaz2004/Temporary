@@ -15,6 +15,7 @@ const vendorSchema = new mongoose.Schema(
     phone: { type: String, required: true },
     image: { type: String },
     address: { type: String, required: true },
+
     coordinates: {
       latitude: { type: Number },
       longitude: { type: Number },
@@ -42,8 +43,8 @@ const vendorSchema = new mongoose.Schema(
     safetyStandards: [String],
 
     // Performance Metrics
-    rating: { type: Number, required: true, default: 0 },
-    reviews: { type: Number, required: true, default: 0 },
+    rating: { type: Number, default: 0 },
+    reviews: { type: Number, default: 0 },
     // distance: { type: String, required: true },
     completedPickups: { type: Number, default: 0 },
     // featured: { type: Boolean, default: false },

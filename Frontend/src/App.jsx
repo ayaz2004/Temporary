@@ -13,6 +13,7 @@ import VendorDetails from "./pages/VendorDetails";
 import FooterCom from "./components/Footer";
 import AIModel from "./pages/AIModel";
 import PrivateRoute from "./components/PrivateRoute";
+import AddVendor from "./pages/AddVendor";
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/sign-up" element={<SignUp />} />
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="add-vendor" element={<AddVendor />} />
           </Route>
           <Route path="/product" element={<Product />} />
           <Route path="/product/:productId" element={<ProductDetails />} />
