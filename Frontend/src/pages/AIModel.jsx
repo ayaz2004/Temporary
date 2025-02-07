@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button, Spinner } from "flowbite-react";
 import {
@@ -13,6 +13,13 @@ import {
   FaFileAlt,
 } from "react-icons/fa";
 
+const getMaxConfidencePrediction = (predictions) => {
+  if (!predictions || predictions.length === 0) return null;
+
+  return predictions.reduce((max, prediction) => {
+    return prediction.confidence > max.confidence ? prediction : max;
+  }, predictions[0]);
+};
 const AIModel = () => {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -68,12 +75,48 @@ const AIModel = () => {
 
       const data = await response.json();
       setResult(data);
+
+      // Call addProduct after setting the result
+      if (data.predictions && data.predictions.length > 0) {
+        await addProduct(data.predictions);
+      }
     } catch (error) {
       console.error("Classification error:", error);
-      // Add user-friendly error message
       setResult({ error: "Failed to classify image. Please try again." });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const addProduct = async (predictions) => {
+    console.log("Inside addProduct");
+    const maxConfidencePrediction = getMaxConfidencePrediction(predictions);
+    const category = maxConfidencePrediction.class;
+
+    try {
+      const response = await fetch(
+        `/api/product/add/678e31052630ba042159800a`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            category,
+            quantity: 1,
+            price: 30,
+            description: "This is garbage",
+            images: "qq",
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Product added successfully:", data);
+    } catch (error) {
+      console.error("Error adding product:", error);
     }
   };
 

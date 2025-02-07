@@ -14,7 +14,7 @@ export const addProduct = async (req, res, next) => {
     }
 
     const { category, quantity, price, description, images } = req.body;
-
+    console.log(req.body)
     // Validate required fields
     if (!category || !quantity || !price || !description) {
       return next(errorHanler(400, "All fields are required"));

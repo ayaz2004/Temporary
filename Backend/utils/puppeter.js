@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 
-const BROWSER_WS = "wss://brd-customer-hl_51812ad0-zone-scraping_browser1:is8e3n2bn56b@brd.superproxy.io:9222";
+const BROWSER_WS = "wss://brd-customer-hl_d70ece13-zone-scraping_browser1:eg49e03suylz@brd.superproxy.io:9222";
 
 export const getBrowser = async () => {
     let browser;
