@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    profilePicture: {
+      type: String,
+      default:
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+    },
     role: {
       type: String,
       enum: ["user", "vendor", "admin"],
@@ -40,16 +45,10 @@ const userSchema = new mongoose.Schema(
     adharNo: {
       type: String,
     },
-    location: {
-      type: {
-        type: String,
-        enum: ["Point"],
-        required: true,
-      },
-      coordinates: {
-        type: [Number],
-        required: true,
-      },
+
+    coordinates: {
+      latitude: { type: Number },
+      longitude: { type: Number },
     },
   },
   { timestamps: true }

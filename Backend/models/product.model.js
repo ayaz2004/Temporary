@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
 
 export const wasteType = {
-  eWaste: "eWaste",
-  Plastic: "Plastic",
-  Metal: "Metal",
-  Glass: "Glass",
+  electronic: "electronic",
+  plastic: "plastic",
+  clothes: "clothes",
+  glass: "glass",
+  biodegradable: "biodegradable",
+  paper:"paper",
 };
 
 const productSchema = new mongoose.Schema(
@@ -19,7 +21,7 @@ const productSchema = new mongoose.Schema(
     category: {
       type: String,
       enum: wasteType,
-      default: wasteType.Metal,
+      default: wasteType.biodegradable,
       required: true,
     },
     quantity: {

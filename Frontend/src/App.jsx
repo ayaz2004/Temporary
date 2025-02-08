@@ -11,6 +11,9 @@ import Product from "./pages/Product";
 import ProductDetails from "./pages/ProductDetails";
 import VendorDetails from "./pages/VendorDetails";
 import FooterCom from "./components/Footer";
+import AIModel from "./pages/AIModel";
+import PrivateRoute from "./components/PrivateRoute";
+import AddVendor from "./pages/AddVendor";
 
 export default function App() {
   return (
@@ -22,13 +25,17 @@ export default function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/about" element={<About />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="add-vendor" element={<AddVendor />} />
+          </Route>
           <Route path="/product" element={<Product />} />
           <Route path="/product/:productId" element={<ProductDetails />} />
           <Route path="/vendor/:vendorId" element={<VendorDetails />} />
+          <Route path="AIModel" element={<AIModel />} />
         </Routes>
         <FooterCom />
       </BrowserRouter>

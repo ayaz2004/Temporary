@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { Button, Spinner } from "flowbite-react";
+import { FaRecycle, FaLeaf, FaTrash, FaSeedling } from "react-icons/fa";
+import { MdBiotech } from "react-icons/md";
 import VendorList from "../components/VendorList";
 import { TileLayer, MapContainer, Polyline } from "react-leaflet";
 import { icon } from "leaflet";
 import { coordinatesAndTimeStamp } from "../coordinateResponse/reponse";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,6 +16,8 @@ const Home = () => {
   const [coordinates, setCoordinates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchCoordinates = async () => {
       try {
@@ -148,7 +153,7 @@ const Home = () => {
         </MapContainer>
       </div> */}
       {/* Map Section */}
-      <div className="h-[400px] w-full mb-8 rounded-lg overflow-hidden shadow-lg">
+      <div className="h-[400px] w-full mb-8 rounded-lg overflow-hidden shadow-lg ">
         {loading ? (
           <div className="h-full flex items-center justify-center bg-gray-800">
             <p className="text-white">Loading map data...</p>
@@ -210,6 +215,52 @@ const Home = () => {
           favorites={favorites}
           toggleFavorite={toggleFavorite}
         />
+      </div>
+
+      {/* AI Classification Section */}
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        <div className="bg-gray-800/50 rounded-3xl p-8 backdrop-blur-sm border border-green-500/20">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <h2 className="text-4xl font-bold text-white">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-teal-400">
+                  AI-Powered
+                </span>{" "}
+                Waste Classification
+              </h2>
+              <p className="text-gray-300 text-lg">
+                Let our advanced AI identify and classify your waste materials
+                instantly
+              </p>
+              <Button
+                gradientDuoTone="greenToBlue"
+                size="xl"
+                onClick={() => navigate("/AIModel")}
+                className="transform hover:scale-105 transition-all"
+              >
+                Try It Now
+              </Button>
+            </div>
+
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-teal-500/20 rounded-2xl blur-3xl" />
+              <div className="relative grid grid-cols-2 gap-4">
+                <div className="flex items-center justify-center p-8 bg-gray-900/50 rounded-2xl backdrop-blur-sm">
+                  <FaRecycle className="text-6xl text-green-500 animate-bounce" />
+                </div>
+                <div className="flex items-center justify-center p-8 bg-gray-900/50 rounded-2xl backdrop-blur-sm">
+                  <FaLeaf className="text-6xl text-teal-500 animate-pulse" />
+                </div>
+                <div className="flex items-center justify-center p-8 bg-gray-900/50 rounded-2xl backdrop-blur-sm">
+                  <MdBiotech className="text-6xl text-cyan-500 animate-pulse" />
+                </div>
+                <div className="flex items-center justify-center p-8 bg-gray-900/50 rounded-2xl backdrop-blur-sm">
+                  <FaSeedling className="text-6xl text-emerald-500 animate-bounce" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
