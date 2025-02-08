@@ -6,7 +6,7 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = twilio(accountSid, authToken);
 
-export const sendOTP = async (phoneNumber) => {
+export const sendNotification = async (phoneNumber) => {
   const otp = Math.floor(1000 + Math.random() * 9000); // Generate a random 4-digit OTP
   console.log(`Generated OTP: for ${phoneNumber} :-> ${otp}`);
 

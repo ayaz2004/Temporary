@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button, Spinner } from "flowbite-react";
+import { useSelector } from "react-redux";
 import {
   FaCloudUploadAlt,
   FaRecycle,
@@ -20,12 +21,32 @@ const getMaxConfidencePrediction = (predictions) => {
     return prediction.confidence > max.confidence ? prediction : max;
   }, predictions[0]);
 };
+
+
+const notifyVandors = async (userCoordinates) => {
+  try {
+    const response = await fetch("/api/user/notifynearbyvandors", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      // Sending both userCoordinates and a fixed radius in meters (e.g., 5000 m)
+      body: JSON.stringify({ userCoordinates }),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to notify vendors");
+    }
+    const data = await response.json();
+    console.log("Notified vendors:", data);
+  } catch (error) {
+    console.error("Error notifying vendors:", error);
+  }
+};
+
 const AIModel = () => {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
-
+  const {currentUser} = useSelector((state) => state.user);
   const getMaterialIcon = (type) => {
     const icons = {
       biodegradable: FaLeaf,
@@ -68,6 +89,7 @@ const AIModel = () => {
         },
         body: base64Image,
       });
+      notifyVandors(currentUser.coordinates);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

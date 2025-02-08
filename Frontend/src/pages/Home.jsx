@@ -15,7 +15,27 @@ import { coordinatesAndTimeStamp } from "../coordinateResponse/reponse";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
+const notifyUser = async (userCoordinates,vanCoordinates) => {
+  try {
+    const response = await fetch("/api/user/notifyusersforvan", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      // Sending both userCoordinates and a fixed radius in meters (e.g., 5000 m)
+      body: JSON.stringify({ userCoordinates,vanCoordinates }),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to notify users");
+    }
+    const data = await response.json();
+    console.log("Notified users:", data);
+  } catch (error) {
+    console.error("Error notifying vendors:", error);
+  }
+};
+
+
 const Home = () => {
+  const [lastCoordinate, setLastCoordinate] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
   const [searchTerm, setSearchTerm] = useState("");
   const [wasteFilter, setWasteFilter] = useState("all");
@@ -31,6 +51,9 @@ const Home = () => {
       try {
         const data = await coordinatesAndTimeStamp();
         setCoordinates(data.data);
+        if (data.data && data.data.length > 0) {
+          setLastCoordinate(data.data[data.data.length - 1]);
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -49,6 +72,11 @@ const Home = () => {
   }, []);
   const [vendors, setVendors] = useState([]);
 
+  useEffect(() => {
+    if (lastCoordinate) {
+      notifyUser(currentUser.coordinates,lastCoordinate);
+    }
+  },[lastCoordinate])
   // Fetch vendors from backend API
   useEffect(() => {
     const fetchVendors = async () => {
