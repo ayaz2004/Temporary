@@ -112,13 +112,13 @@ export default function AddVendor() {
 
     setLoading(true);
     try {
-      
+      const base64Image = imageFile ? await convertToBase64(imageFile) : null;
       const res = await fetch("/api/vendor/addVendor", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...formData, imageFile }),
+        body: JSON.stringify({ ...formData, image: base64Image }),
       });
 
       const data = await res.json();

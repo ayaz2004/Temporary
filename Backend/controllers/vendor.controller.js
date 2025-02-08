@@ -15,24 +15,27 @@ export const addVendor = async (req, res, next) => {
       availableTime,
       responseTime,
       price,
+
     } = req.body;
 
     // Validate required fields
-    if (
-      !name ||
-      !phone ||
-      !address ||
-      !availableTime ||
-      !responseTime ||
-      !price
-    ) {
-      return next(errorHanler(400, "All required fields must be provided"));
-    }
-    const imagePath = req.file?.imageFile[0];
-    const imageResponse = await uploadImage(imagePath.path);
-    if(!imageResponse){
-      return next(errorHanler(500, "Error uploading image"));
-    }
+    // if (
+    //   !name ||
+    //   !phone ||
+    //   !address ||
+    //   !availableTime ||
+    //   !responseTime ||
+    //   !price
+    // ) {
+    //   return next(errorHanler(400, "All required fields must be provided"));
+    // }
+    // const imagePath = req.files?.imageFile[0]?.path;
+  
+    // const imageResponse = await uploadImage(imagePath);
+    // if(!imageResponse){
+    //   return next(errorHanler(500, "Error uploading image"));
+    // }
+
 
     const vendor = new Vendor({
       name,
@@ -43,13 +46,13 @@ export const addVendor = async (req, res, next) => {
       availableTime,
       responseTime,
       price,
-      imageF: imageResponse.url && imageResponse.url,
-      ...otherData,
+   
+  
     });
 
-    console.log(vendor);
 
-    const savedVendor = await vendor.save();
+
+    const savedVendor = await vendor.save({validateBeforeSave:false});
 
     console.log(savedVendor);
 
