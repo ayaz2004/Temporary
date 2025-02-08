@@ -75,8 +75,8 @@ try {
     parseFloat(vanCoordinates.longitude)
   );
 
-  console.log("Distance in meters:", distance);
-  if (distance < 13000) {
+  console.log("Distance in meters for van:", distance);
+  if (distance < 130) {
     sendNotification("8745971753");
   }
   res.json(new ApiResponse(200, "Notification sent successfully"));

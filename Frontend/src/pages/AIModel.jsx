@@ -75,13 +75,13 @@ const AIModel = () => {
 
   const handleClassify = async () => {
     if (!image) return;
-
+  
     setLoading(true);
     try {
       const base64Image = await convertToBase64(image);
       const API_KEY = import.meta.env.VITE_ROBOFLOW_API_KEY;
       const MODEL_ENDPOINT = import.meta.env.VITE_MODEL_ENDPOINT;
-
+  
       const response = await fetch(`${MODEL_ENDPOINT}?api_key=${API_KEY}`, {
         method: "POST",
         headers: {
@@ -89,19 +89,25 @@ const AIModel = () => {
         },
         body: base64Image,
       });
-      notifyVandors(currentUser.coordinates);
-
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+  
       const data = await response.json();
-      setResult(data);
-
-      // Call addProduct after setting the result
-      if (data.predictions && data.predictions.length > 0) {
-        await addProduct(data.predictions);
+      let error = null;
+  
+      if (data.predictions?.length > 0) {
+        const maxPrediction = getMaxConfidencePrediction(data.predictions);
+        if (maxPrediction.class.toLowerCase() === 'electronic') {
+          error = "You cannot throw e-waste in the garbage. Please dispose of it properly.";
+        } else {
+          await addProduct(data.predictions);
+        }
       }
+  
+      setResult({ ...data, error });
+      notifyVandors(currentUser.coordinates);
     } catch (error) {
       console.error("Classification error:", error);
       setResult({ error: "Failed to classify image. Please try again." });
@@ -109,7 +115,6 @@ const AIModel = () => {
       setLoading(false);
     }
   };
-
   const addProduct = async (predictions) => {
     console.log("Inside addProduct");
     const maxConfidencePrediction = getMaxConfidencePrediction(predictions);

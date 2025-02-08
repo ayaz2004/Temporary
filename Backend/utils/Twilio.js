@@ -12,7 +12,7 @@ export const sendNotification = async (phoneNumber) => {
 
   try {
     const message = await client.messages.create({
-      body: `Your OTP is: ${otp}`, // Send OTP in the message
+      body: `Garbage picking van is arriving check the app`, // Send OTP in the message
       from: "+12315005883", // Twilio phone number (update with your own)
       to: `+91${phoneNumber}`, // Dynamically use the phone number passed in
     });
