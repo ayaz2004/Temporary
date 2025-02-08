@@ -1,0 +1,49 @@
+{
+    "dashboard": {
+      "totalUsers": 100,
+      "totalVendors": 20,
+      "totalWastePosted": 500,
+      "totalWasteCollected": 350,
+      "pendingWaste": 150
+    },
+    "vendorCollectionsHistory": {
+    "Green Recyclers": [
+      { "month": "January", "collections": 20 },
+      { "month": "February", "collections": 25 },
+      { "month": "March", "collections": 18 },
+      { "month": "April", "collections": 22 }
+    ],
+    "Eco Waste Management": [
+      { "month": "January", "collections": 15 },
+      { "month": "February", "collections": 19 },
+      { "month": "March", "collections": 23 },
+      { "month": "April", "collections": 17 }
+    ]
+  },
+    "pendingVendors": [
+      { "id": 1, "name": "John Doe", "business": "Recycling Ltd" },
+      { "id": 2, "name": "Jane Smith", "business": "Green Waste Solutions" }
+    ],
+
+    
+        "users": [
+    {
+      "email": "johndoe@example.com",
+      "name": "John Doe",
+      "wastePosted": [
+        { "month": "Jan", "amount": 5 },
+        { "month": "Feb", "amount": 8 },
+        { "month": "Mar", "amount": 3 }
+      ],
+      "wasteCollected": [
+        { "month": "Jan", "amount": 2 },
+        { "month": "Feb", "amount": 7 },
+        { "month": "Mar", "amount": 3 }
+      ]
+    }
+  ],
+      
+   
+    "verifiedVendors": []
+  }
+  

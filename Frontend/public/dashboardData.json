@@ -1,0 +1,12 @@
+{
+    "totalUsers": 150,
+    "totalVendors": 30,
+    "totalWastePosted": 500,
+    "totalWasteCollected": 350,
+    "pendingWaste": 150,
+    "pendingVendors": [
+      { "id": 1, "name": "Vendor A", "email": "vendorA@example.com" },
+      { "id": 2, "name": "Vendor B", "email": "vendorB@example.com" }
+    ]
+  }
+  
