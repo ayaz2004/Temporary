@@ -76,9 +76,9 @@ try {
   );
 
   console.log("Distance in meters for van:", distance);
-  if (distance < 130) {
+
     sendNotification("8745971753");
-  }
+  
   res.json(new ApiResponse(200, "Notification sent successfully"));
 } catch (error) {
   next(errorHanler(500, error.message));

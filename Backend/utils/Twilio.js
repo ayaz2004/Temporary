@@ -17,6 +17,8 @@ export const sendNotification = async (phoneNumber) => {
       to: `+91${phoneNumber}`, // Dynamically use the phone number passed in
     });
 
+    
+
     console.log(`Message sent successfully with SID: ${message.sid}`);
     return { otp }; // Return the OTP to be used in the signup process
   } catch (error) {
