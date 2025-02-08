@@ -12,7 +12,8 @@ import { useDispatch } from "react-redux";
 import { signoutSuccess } from "../redux/user/userSlice";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
-import WasteCollection from '../components/WasteCollection';
+
+import WasteCollection from "../components/WasteCollection";
 export default function DashSidebar() {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -101,7 +102,7 @@ export default function DashSidebar() {
                     active={tab === "add-waste"}
                     icon={HiTruck}
                     className={`${
-                      tab === "waste-collection"
+                      tab === "add-waste"
                         ? "bg-green-500/20 text-green-400 border-r-4 border-green-500"
                         : "text-gray-300 hover:text-green-500 hover:bg-gray-800/50"
                     } transition-all duration-200`}
