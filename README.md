@@ -32,6 +32,39 @@ WasteWise is a comprehensive platform designed to connect waste collectors, vend
 - **Product Management**: Monitor and manage all waste products listed on the platform.
 - **Analytics**: View platform usage statistics and performance metrics.
 
+### Reward Points
+🎯 Reward System for Users
+
+✅ Earn Points for Proper Waste DisposalUsers earn points when they dispose of waste correctly, such as tracking MCD vans and handing over waste at the right time.
+
+✅ Bonus for Selling Waste to VendorsExtra points are awarded when users sell e-waste, plastic, or other recyclables to vendors through the platform.
+
+✅ Referral RewardsUsers can invite friends to join the platform. When a referred user completes their first waste disposal or sale, both earn bonus points.
+
+🔄 Reward System for Vendors
+
+🏆 Points for Buying RecyclablesVendors earn points when they successfully purchase and recycle waste from users.
+
+📦 Extra for Large TransactionsHigher points for vendors who collect and process large quantities of waste efficiently.
+
+⭐ Ratings & Feedback BoostVendors who receive high ratings from users get additional bonus points as a trust incentive.
+
+💰 How to Redeem Points?
+
+🔹 For Users
+
+Convert points into discounts on future waste pickups.
+
+Redeem for shopping vouchers or cashback rewards.
+
+🔹 For Vendors
+
+Use points to reduce platform fees.
+
+Get premium visibility on the platform.
+
+Exchange points for cashback or other incentives.
+
 ## Technologies Used
 
 ### Frontend
