@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import { signoutSuccess } from "../redux/user/userSlice";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
-
+import WasteCollection from '../components/WasteCollection';
 export default function DashSidebar() {
   const location = useLocation();
   const dispatch = useDispatch();

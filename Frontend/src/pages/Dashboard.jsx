@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import DashSidebar from "../components/DashSidebar";
 import DashProfile from "../components/DashProfile";
 import AddWaste from "../components/AddWaste";
-
+import WasteCollection from "../components/WasteCollection";
 export default function Dashboard() {
   const location = useLocation();
   const [tab, setTab] = useState("");
@@ -23,6 +23,7 @@ export default function Dashboard() {
       {/* profile... */}
       {tab === "profile" && <DashProfile />}
       {tab === "add-waste" && <AddWaste />}
+      {tab === "waste-collection" && <WasteCollection />}
     </div>
   );
 }
