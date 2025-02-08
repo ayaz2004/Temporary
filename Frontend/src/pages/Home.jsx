@@ -3,12 +3,20 @@ import { Button, Spinner } from "flowbite-react";
 import { FaRecycle, FaLeaf, FaTrash, FaSeedling } from "react-icons/fa";
 import { MdBiotech } from "react-icons/md";
 import VendorList from "../components/VendorList";
-import { TileLayer, MapContainer, Polyline } from "react-leaflet";
+import {
+  TileLayer,
+  MapContainer,
+  Polyline,
+  Marker,
+  Popup,
+} from "react-leaflet";
 import { icon } from "leaflet";
 import { coordinatesAndTimeStamp } from "../coordinateResponse/reponse";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Home = () => {
+  const { currentUser } = useSelector((state) => state.user);
   const [searchTerm, setSearchTerm] = useState("");
   const [wasteFilter, setWasteFilter] = useState("all");
   const [sortBy, setSortBy] = useState("rating");
@@ -17,12 +25,11 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
+  console.log(currentUser);
   useEffect(() => {
     const fetchCoordinates = async () => {
       try {
         const data = await coordinatesAndTimeStamp();
-
         setCoordinates(data.data);
       } catch (err) {
         setError(err.message);
@@ -31,7 +38,14 @@ const Home = () => {
       }
     };
 
+    // Initial fetch
     fetchCoordinates();
+
+    // Set up interval to run every 60 seconds
+    const intervalId = setInterval(fetchCoordinates, 60000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
   }, []);
   const [vendors, setVendors] = useState([]);
 
@@ -82,6 +96,7 @@ const Home = () => {
     parseFloat(coord.latitude),
     parseFloat(coord.longitude),
   ]);
+  console.log(coordinates[0]);
   const defaultCenter = coordinates[0]
     ? [
         parseFloat(coordinates[0].latitude),
@@ -163,40 +178,41 @@ const Home = () => {
             <p className="text-red-500">Error: {error}</p>
           </div>
         ) : (
-          <MapContainer
-            center={defaultCenter}
-            zoom={16}
-            style={{ height: "100%", width: "100%" }}
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            />
+          coordinates.length > 0 && (
+            <MapContainer
+              center={defaultCenter}
+              zoom={16}
+              style={{ height: "100%", width: "100%" }}>
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              />
 
-            <Polyline
-              positions={routeCoordinates}
-              color="red"
-              weight={6}
-              opacity={0.9}
-            />
+              <Polyline
+                positions={routeCoordinates}
+                color="red"
+                weight={6}
+                opacity={0.9}
+              />
 
-            {/* {coordinates.map((coord, index) => (
-              <Marker
-                key={index}
-                position={[
-                  parseFloat(coord.latitude),
-                  parseFloat(coord.longitude),
-                ]}
-              >
-                <Popup>
-                  <div className="p-2">
-                    <h3 className="font-bold">Point {index + 1}</h3>
-                    <p>Time: {coord.stamp}</p>
-                  </div>
-                </Popup>
-              </Marker>
-            ))} */}
-          </MapContainer>
+              {/* {coordinates.map((coord, index) => (
+            <Marker
+              key={index}
+              position={[
+                parseFloat(coord.latitude),
+                parseFloat(coord.longitude),
+              ]}
+            >
+              <Popup>
+                <div className="p-2">
+                  <h3 className="font-bold">Point {index + 1}</h3>
+                  <p>Time: {coord.stamp}</p>
+                </div>
+              </Popup>
+            </Marker>
+          ))} */}
+            </MapContainer>
+          )
         )}
       </div>
 
@@ -236,8 +252,7 @@ const Home = () => {
                 gradientDuoTone="greenToBlue"
                 size="xl"
                 onClick={() => navigate("/AIModel")}
-                className="transform hover:scale-105 transition-all"
-              >
+                className="transform hover:scale-105 transition-all">
                 Try It Now
               </Button>
             </div>

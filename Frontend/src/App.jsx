@@ -12,8 +12,11 @@ import ProductDetails from "./pages/ProductDetails";
 import VendorDetails from "./pages/VendorDetails";
 import FooterCom from "./components/Footer";
 import AIModel from "./pages/AIModel";
+import { useEffect,useState } from "react";
+
 
 export default function App() {
+
   return (
     <>
       {/* Leaflet Map */}

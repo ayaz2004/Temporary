@@ -16,7 +16,7 @@ export const signup = async (req, res, next) => {
       adharNo,
       coordinates,
     } = req.body;
-console.log(req.body)
+
     if (!username || !email || !password) {
       return next(errorHanler(400, "All fields are required"));
     }
@@ -44,7 +44,7 @@ console.log(req.body)
     }
 
     // Save User
-    await newUser.save();
+    await newUser.save({validateBeforeSave:false});
 
     res
       .status(201)
@@ -52,7 +52,7 @@ console.log(req.body)
         new ApiResponse(
           200,
           "Signup successful. Waiting for approval",
-          newUser.username
+          newUser
         )
       );
   } catch (error) {
