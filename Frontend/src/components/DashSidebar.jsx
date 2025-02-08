@@ -5,6 +5,7 @@ import {
   HiTruck,
   HiDocumentReport,
   HiLocationMarker,
+  HiTrash,
 } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -14,6 +15,7 @@ import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 
 import WasteCollection from "../components/WasteCollection";
+import { FaBoxOpen } from "react-icons/fa";
 export default function DashSidebar() {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -100,7 +102,7 @@ export default function DashSidebar() {
                 <Link to="/dashboard?tab=add-waste">
                   <Sidebar.Item
                     active={tab === "add-waste"}
-                    icon={HiTruck}
+                    icon={HiTrash}
                     className={`${
                       tab === "add-waste"
                         ? "bg-green-500/20 text-green-400 border-r-4 border-green-500"
@@ -109,6 +111,24 @@ export default function DashSidebar() {
                     as="div"
                   >
                     Add Waste
+                  </Sidebar.Item>
+                </Link>
+              </motion.div>
+            )}
+            {currentUser?.role === "user" && (
+              <motion.div variants={itemVariants} whileHover="hover">
+                <Link to="/dashboard?tab=add-product">
+                  <Sidebar.Item
+                    active={tab === "add-product"}
+                    icon={FaBoxOpen}
+                    className={`${
+                      tab === "add-waste"
+                        ? "bg-green-500/20 text-green-400 border-r-4 border-green-500"
+                        : "text-gray-300 hover:text-green-500 hover:bg-gray-800/50"
+                    } transition-all duration-200`}
+                    as="div"
+                  >
+                    Add Used Product
                   </Sidebar.Item>
                 </Link>
               </motion.div>
