@@ -135,6 +135,9 @@ WasteWise is a comprehensive platform designed to connect waste collectors, vend
    - Vendors can track their performance metrics, including completed pickups, ratings, and reviews.
    - Users can rate vendors based on their experience.
 
+   ![WhatsApp Image 2025-02-09 at 02 28 43_037a5e03](https://github.com/user-attachments/assets/f80eae55-dc62-479c-b3e2-3c0622bfa302)
+
+
 ---
 
 ## Why WasteWise?
