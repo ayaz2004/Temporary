@@ -5,6 +5,8 @@ import DashProfile from "../components/DashProfile";
 import AddWaste from "../components/AddWaste";
 import WasteCollection from "../components/WasteCollection";
 import WorkArea from "../components/WorkArea";
+import Report from "../components/Report";
+
 export default function Dashboard() {
   const location = useLocation();
   const [tab, setTab] = useState("");
@@ -26,6 +28,7 @@ export default function Dashboard() {
       {tab === "add-waste" && <AddWaste />}
       {tab === "waste-collection" && <WasteCollection />}
       {tab === "work-area" && <WorkArea />}
+      {tab === "reports" && <Report />}
     </div>
   );
 }
