@@ -13,6 +13,7 @@ export const getCoordinatesAndTimestamp = async (req, res) => {
     // Wait for the scraping to complete and get the data
     const scrapedData = await getBrowser();
 
+
     // if (scrapedData && scrapedData.length > 0) {
     console.log(scrapedData);
     res.json({
@@ -31,9 +32,22 @@ export const getCoordinatesAndTimestamp = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server error while fetching coordinates",
+      message: "Server error while fetching coordinates",
     });
   }
 };
+
+export const signout = (req, res, next) => {
+  try {
+    res
+      .clearCookie("access_token")
+      .status(200)
+      .json("User has been signed out");
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 export const getAllNearByVandors = async (req, res, next) => {
   const { latitude, longitude } = req.body.userCoordinates;

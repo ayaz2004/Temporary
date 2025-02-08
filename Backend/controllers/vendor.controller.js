@@ -2,44 +2,60 @@ import Vendor from "../models/vendor.model.js";
 import { errorHanler } from "../utils/error.js";
 import ApiResponse from "../utils/ApiRresponse.js";
 import mongoose from "mongoose";
+import {uploadImage} from "../utils/cloudinary.js"
 
 export const addVendor = async (req, res, next) => {
   try {
     const {
       name,
-      email,
       phone,
+      email,
       address,
       businessLicense,
-      specialization,
       availableTime,
       responseTime,
       price,
-      certifications,
-      rating,
-      distance,
+
     } = req.body;
 
     // Validate required fields
-    if (
-      !name ||
-      !email ||
-      !phone ||
-      !address ||
-      !businessLicense ||
-      !specialization ||
-      !availableTime ||
-      !responseTime ||
-      !price ||
-      !certifications ||
-      !rating ||
-      !distance
-    ) {
-      return next(errorHanler(400, "All required fields must be provided"));
-    }
+    // if (
+    //   !name ||
+    //   !phone ||
+    //   !address ||
+    //   !availableTime ||
+    //   !responseTime ||
+    //   !price
+    // ) {
+    //   return next(errorHanler(400, "All required fields must be provided"));
+    // }
+    // const imagePath = req.files?.imageFile[0]?.path;
+  
+    // const imageResponse = await uploadImage(imagePath);
+    // if(!imageResponse){
+    //   return next(errorHanler(500, "Error uploading image"));
+    // }
 
-    const vendor = new Vendor(req.body);
-    const savedVendor = await vendor.save();
+
+    const vendor = new Vendor({
+      name,
+      phone,
+      email,
+      address,
+      businessLicense,
+      availableTime,
+      responseTime,
+      price,
+   
+  
+    });
+
+
+
+    const savedVendor = await vendor.save({validateBeforeSave:false});
+
+    console.log(savedVendor);
+
     res
       .status(201)
       .json(new ApiResponse(201, "Vendor added successfully", savedVendor));
