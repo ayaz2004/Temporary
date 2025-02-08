@@ -3,6 +3,9 @@ import { useLocation } from "react-router-dom";
 import DashSidebar from "../components/DashSidebar";
 import DashProfile from "../components/DashProfile";
 import AddWaste from "../components/AddWaste";
+import WasteCollection from "../components/WasteCollection";
+import WorkArea from "../components/WorkArea";
+import Report from "../components/Report";
 
 export default function Dashboard() {
   const location = useLocation();
@@ -23,6 +26,9 @@ export default function Dashboard() {
       {/* profile... */}
       {tab === "profile" && <DashProfile />}
       {tab === "add-waste" && <AddWaste />}
+      {tab === "waste-collection" && <WasteCollection />}
+      {tab === "work-area" && <WorkArea />}
+      {tab === "reports" && <Report />}
     </div>
   );
 }
