@@ -6,6 +6,7 @@ import AddWaste from "../components/AddWaste";
 import WasteCollection from "../components/WasteCollection";
 import WorkArea from "../components/WorkArea";
 import Report from "../components/Report";
+import AddProduct from "../components/AddProduct";
 
 export default function Dashboard() {
   const location = useLocation();
@@ -26,6 +27,7 @@ export default function Dashboard() {
       {/* profile... */}
       {tab === "profile" && <DashProfile />}
       {tab === "add-waste" && <AddWaste />}
+      {tab === "add-product" && <AddProduct />}
       {tab === "waste-collection" && <WasteCollection />}
       {tab === "work-area" && <WorkArea />}
       {tab === "reports" && <Report />}
