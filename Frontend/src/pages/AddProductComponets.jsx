@@ -1,6 +1,26 @@
 import { useState } from "react";
 import { Button, Spinner, TextInput, Textarea } from "flowbite-react";
-import { FaPlus, FaSave, FaTimes } from "react-icons/fa";
+import { FaCloudUploadAlt, FaPlus, FaSave, FaTimes } from "react-icons/fa";
+
+// Utility: Convert file to base64
+const convertToBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+};
+
+// Utility: Get prediction with highest confidence
+const getMaxConfidencePrediction = (predictions) => {
+  if (!predictions || predictions.length === 0) return null;
+  return predictions.reduce(
+    (max, prediction) =>
+      prediction.confidence > max.confidence ? prediction : max,
+    predictions[0]
+  );
+};
 
 const AddProductSection = () => {
   const [productName, setProductName] = useState("");
@@ -8,12 +28,40 @@ const AddProductSection = () => {
   const [productImage, setProductImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [predictedCategory, setPredictedCategory] = useState("");
 
-  const handleImageChange = (e) => {
+  const predictCategory = async (file) => {
+    try {
+      const base64Image = await convertToBase64(file);
+      const API_KEY = import.meta.env.VITE_ROBOFLOW_API_KEY;
+      const MODEL_ENDPOINT = import.meta.env.VITE_MODEL_ENDPOINT;
+
+      const response = await fetch(`${MODEL_ENDPOINT}?api_key=${API_KEY}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: base64Image,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const maxPrediction = getMaxConfidencePrediction(data.predictions);
+      const predicted = maxPrediction ? maxPrediction.class : "";
+      setPredictedCategory(predicted);
+    } catch (error) {
+      console.error("Prediction error:", error);
+      setPredictedCategory("");
+    }
+  };
+
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
       setProductImage(file);
       setPreview(URL.createObjectURL(file));
+      await predictCategory(file);
     }
   };
 
@@ -22,12 +70,14 @@ const AddProductSection = () => {
     if (!productName || !productDescription || !productImage) return;
 
     setLoading(true);
+
     try {
       // Simulate API call or form submission
       const formData = new FormData();
       formData.append("name", productName);
       formData.append("description", productDescription);
       formData.append("image", productImage);
+      formData.append("predictedCategory", predictedCategory);
 
       // Replace with your actual API endpoint
       const response = await fetch("/api/products", {
@@ -44,6 +94,7 @@ const AddProductSection = () => {
       setProductDescription("");
       setProductImage(null);
       setPreview(null);
+      setPredictedCategory("");
       alert("Product added successfully!");
     } catch (error) {
       console.error("Error adding product:", error);
@@ -112,6 +163,11 @@ const AddProductSection = () => {
               </div>
             )}
           </div>
+          {predictedCategory && (
+            <p className="mt-2 text-green-400">
+              Predicted Category: {predictedCategory}
+            </p>
+          )}
         </div>
 
         <div className="flex justify-end gap-4">
@@ -123,6 +179,7 @@ const AddProductSection = () => {
               setProductDescription("");
               setProductImage(null);
               setPreview(null);
+              setPredictedCategory("");
             }}
             disabled={loading}
           >

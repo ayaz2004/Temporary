@@ -49,6 +49,19 @@ export default function DashProfile() {
     navigate("/add-vendor");
   };
 
+  useEffect(() => {
+    if (currentUser) {
+      setFormData({
+        username: currentUser.username,
+        email: currentUser.email,
+        workArea: currentUser.workArea,
+        vehicleNumber: currentUser.vehicleNumber,
+        adharNo: currentUser.adharNo,
+        role: currentUser.role, // "admin" or "user"
+      });
+    }
+  }, [currentUser]);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {

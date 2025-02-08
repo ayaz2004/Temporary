@@ -20,6 +20,7 @@ export default function AddWaste() {
   const [images, setImages] = useState([]);
   const [imageFiles, setImageFiles] = useState([]);
 
+  const [predictionResult, setPredictionResult] = useState(null);
   const [wastes, setWastes] = useState([]);
   const [loadingWastes, setLoadingWastes] = useState(true);
 
@@ -51,11 +52,68 @@ export default function AddWaste() {
     description: "",
   });
 
-  const handleImageChange = (e) => {
+  // Utility: Convert file to base64
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  // Utility: Get prediction with highest confidence
+  const getMaxConfidencePrediction = (predictions) => {
+    if (!predictions || predictions.length === 0) return null;
+    return predictions.reduce(
+      (max, prediction) =>
+        prediction.confidence > max.confidence ? prediction : max,
+      predictions[0]
+    );
+  };
+
+  // Call ML prediction on a file and update state
+  const predictCategory = async (file) => {
+    try {
+      const base64Image = await convertToBase64(file);
+      const API_KEY = import.meta.env.VITE_ROBOFLOW_API_KEY;
+      const MODEL_ENDPOINT = import.meta.env.VITE_MODEL_ENDPOINT;
+      const response = await fetch(`${MODEL_ENDPOINT}?api_key=${API_KEY}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: base64Image,
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      const maxPrediction = getMaxConfidencePrediction(data.predictions);
+      if (maxPrediction) {
+        setPredictionResult({
+          category: maxPrediction.class,
+          confidence: maxPrediction.confidence,
+        });
+      } else {
+        setPredictionResult(null);
+      }
+    } catch (error) {
+      console.error("Prediction error:", error);
+      setPredictionResult(null);
+      toast.error("ML prediction failed");
+    }
+  };
+
+  const handleImageChange = async (e) => {
     const files = Array.from(e.target.files);
     setImageFiles(files);
     const previews = files.map((file) => URL.createObjectURL(file));
     setImages(previews);
+    // Predict using the first image
+    if (files.length > 0) {
+      await predictCategory(files[0]);
+    } else {
+      setPredictionResult(null);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -82,6 +140,11 @@ export default function AddWaste() {
         body: JSON.stringify({
           ...formData,
           images: imageUrls,
+          // Optionally update the category based on prediction
+          predictedCategory: predictionResult ? predictionResult.category : "",
+          predictionConfidence: predictionResult
+            ? predictionResult.confidence
+            : 0,
         }),
       });
 
@@ -91,22 +154,13 @@ export default function AddWaste() {
         toast.error(data.message);
       } else {
         toast.success("Waste added successfully!");
-        navigate("/dashboard?tab=waste-collection");
+        // navigate("/dashboard?tab=waste-collection");
       }
     } catch (error) {
       toast.error("Something went wrong!");
     } finally {
       setLoading(false);
     }
-  };
-
-  const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
   };
 
   return (
@@ -247,6 +301,17 @@ export default function AddWaste() {
                   </label>
                 )}
               </div>
+              {predictionResult && (
+                <div className="mt-4 text-center">
+                  <p className="text-green-400 font-semibold">
+                    Predicted Category: {predictionResult.category}
+                  </p>
+                  <p className="text-gray-300 text-sm">
+                    Confidence: {(predictionResult.confidence * 100).toFixed(1)}
+                    %
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -268,12 +333,11 @@ export default function AddWaste() {
             </Button>
           </motion.div>
         </form>
-        {/* Add Waste List Section */}
+        {/* Waste List Section */}
         <div className="mt-12">
           <h2 className="text-2xl font-semibold text-green-400 mb-6">
             Your Waste Items
           </h2>
-
           {loadingWastes ? (
             <div className="flex justify-center items-center min-h-[200px]">
               <div className="w-8 h-8 border-t-2 border-b-2 border-green-500 rounded-full animate-spin" />
@@ -337,7 +401,7 @@ export default function AddWaste() {
                         {waste.description}
                       </p>
                       <p className="text-gray-500 text-xs mt-2">
-                        Added on:{" "}
+                        Added on:
                         {new Date(waste.createdAt).toLocaleDateString()}
                       </p>
                     </div>

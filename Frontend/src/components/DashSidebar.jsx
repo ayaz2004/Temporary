@@ -112,6 +112,7 @@ export default function DashSidebar() {
                 </Link>
               </motion.div>
             )}
+
             <motion.div variants={itemVariants} whileHover="hover">
               <Link to="/dashboard?tab=waste-collection">
                 <Sidebar.Item
