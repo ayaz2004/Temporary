@@ -339,11 +339,13 @@ export default function DashProfile() {
             variants={itemVariants}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
+            className="flex flex-col md:flex-row gap-4"
           >
+            {/* Update Profile Button */}
             <Button
               type="submit"
               gradientDuoTone="greenToBlue"
-              className="w-full py-3 font-semibold text-lg"
+              className="flex-1 py-3 font-semibold text-lg"
               disabled={loading}
             >
               {loading ? (
@@ -354,6 +356,15 @@ export default function DashProfile() {
               ) : (
                 "Update Profile"
               )}
+            </Button>
+            {/* Delete Profile Button */}
+            <Button
+              type="button"
+              gradientDuoTone="redToYellow"
+              className="flex-1 py-3 font-semibold text-lg"
+              // onClick={handleDeleteProfile}
+            >
+              Delete Profile
             </Button>
           </motion.div>
         </motion.form>
