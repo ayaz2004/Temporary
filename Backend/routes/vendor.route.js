@@ -4,6 +4,7 @@ import {
   getAllVendors,
   getVendorById,
 } from "../controllers/vendor.controller.js";
+import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
 

@@ -8,8 +8,8 @@ export const addVendor = async (req, res, next) => {
   try {
     const {
       name,
-      email,
       phone,
+      email,
       address,
       businessLicense,
       availableTime,
@@ -22,7 +22,6 @@ export const addVendor = async (req, res, next) => {
     // Validate required fields
     if (
       !name ||
-      !email ||
       !phone ||
       !address ||
       !availableTime ||
@@ -32,29 +31,33 @@ export const addVendor = async (req, res, next) => {
       return next(errorHanler(400, "All required fields must be provided"));
     }
 
-    let imageUrl = null;
-    if (image) {
-      try {
-        imageUrl = await uploadImage(image);
-      } catch (error) {
-        return next(errorHanler(500, "Image upload failed"));
-      }
-    }
+    // let imageUrl = null;
+    // if (image) {
+    //   try {
+    //     imageUrl = await uploadImage(image);
+    //   } catch (error) {
+    //     return next(errorHanler(500, "Image upload failed"));
+    //   }
+    // }
 
     const vendor = new Vendor({
       name,
-      email,
       phone,
+      email,
       address,
       businessLicense,
       availableTime,
       responseTime,
       price,
-      image: imageUrl,
+      image: "dsnjsn",
       ...otherData,
     });
 
+    console.log(vendor);
+
     const savedVendor = await vendor.save();
+
+    console.log(savedVendor);
 
     res
       .status(201)

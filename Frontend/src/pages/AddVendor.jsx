@@ -51,28 +51,28 @@ export default function AddVendor() {
     phone: "",
     address: "",
     coordinates: {
-      latitude: "",
-      longitude: "",
+      latitude: "70",
+      longitude: "80",
     },
     businessLicense: "",
     establishedYear: new Date().getFullYear(),
     operatingAreas: [],
     wasteTypes: [],
-    specialization: "",
+    // specialization: "",
     availableTime: "",
     responseTime: "",
     price: "",
     servicesOffered: [],
     certifications: [],
     environmentalCompliance: false,
-    safetyStandards: [],
+    // safetyStandards: [],
     vehicleTypes: [],
     processingCapacity: "",
     recyclingMethods: [],
-    rating: 0,
-    reviews: 0,
-    completedPickups: 0,
-    collectedWaste: 0,
+    // rating: 0,
+    // reviews: 0,
+    // completedPickups: 0,
+    // collectedWaste: 0,
   });
 
   const handleSubmit = async (e) => {
@@ -122,6 +122,7 @@ export default function AddVendor() {
       });
 
       const data = await res.json();
+      console.log(data);
 
       if (!res.ok) {
         toast.error(data.message);
@@ -390,7 +391,7 @@ export default function AddVendor() {
                 {/* Operating Areas */}
                 <div className="group">
                   <label className="text-gray-400 mb-2 block">
-                    Operating Areas <span className="text-red-500">*</span>
+                    Operating Areas
                   </label>
                   <div className="relative">
                     <FaMapMarkerAlt className="absolute left-3 top-3 text-green-500" />
