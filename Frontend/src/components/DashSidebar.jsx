@@ -84,6 +84,7 @@ export default function DashSidebar() {
                       ? "bg-green-500/20 text-green-400 border-r-4 border-green-500"
                       : "text-gray-300 hover:text-green-500 hover:bg-gray-800/50"
                   } transition-all duration-200`}
+                  as="div"
                 >
                   Profile
                 </Sidebar.Item>
@@ -100,6 +101,7 @@ export default function DashSidebar() {
                       ? "bg-green-500/20 text-green-400 border-r-4 border-green-500"
                       : "text-gray-300 hover:text-green-500 hover:bg-gray-800/50"
                   } transition-all duration-200`}
+                  as="div"
                 >
                   Waste Collection
                 </Sidebar.Item>
@@ -116,6 +118,7 @@ export default function DashSidebar() {
                       ? "bg-green-500/20 text-green-400 border-r-4 border-green-500"
                       : "text-gray-300 hover:text-green-500 hover:bg-gray-800/50"
                   } transition-all duration-200`}
+                  as="div"
                 >
                   Work Area
                 </Sidebar.Item>
@@ -132,6 +135,7 @@ export default function DashSidebar() {
                       ? "bg-green-500/20 text-green-400 border-r-4 border-green-500"
                       : "text-gray-300 hover:text-green-500 hover:bg-gray-800/50"
                   } transition-all duration-200`}
+                  as="div"
                 >
                   Reports
                 </Sidebar.Item>

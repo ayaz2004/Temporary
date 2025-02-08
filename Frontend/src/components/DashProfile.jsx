@@ -21,7 +21,29 @@ export default function DashProfile() {
   const { currentUser } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
+
+  const [imageFile, setImageFile] = useState(null);
+  const [imageFileUrl, setImageFileUrl] = useState(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFileUrl(file);
+      setImageFile(URL.createObjectURL(file));
+    }
+  };
+
+  useEffect(() => {
+    if (imageFile) {
+      uploadImage();
+    }
+  }, [imageFile]);
+
+  const uploadImage = async () => {
+    console.log("Uploading image...");
+  };
 
   const handleVendorRegistration = () => {
     navigate("/add-vendor");
@@ -56,17 +78,46 @@ export default function DashProfile() {
         {/* Profile Header */}
         <motion.div variants={itemVariants} className="text-center mb-12 p-5">
           <div className="relative inline-block group">
-            <img
-              src={currentUser?.profilePicture}
-              className="w-32 h-32 rounded-full border-4 border-green-500/30 shadow-lg shadow-green-500/20 transition-all duration-300 group-hover:border-green-400/50"
+            <label htmlFor="profileImage" className="cursor-pointer block">
+              <img
+                src={imageFileUrl || currentUser?.profilePicture}
+                className="w-32 h-32 rounded-full border-4 border-green-500/30 shadow-lg shadow-green-500/20 transition-all duration-300 group-hover:border-green-400/50"
+              />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-500/20 to-teal-500/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <span className="text-white text-sm bg-black/50 px-2 py-1 rounded">
+                  Change Photo
+                </span>
+              </div>
+            </label>
+
+            <input
+              type="file"
+              id="profileImage"
+              onChange={handleImageChange}
+              accept="image/*"
+              className="hidden"
             />
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-500/20 to-teal-500/20 animate-pulse" />
+
             {currentUser?.approvedUser && (
               <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-2">
                 <FaCheckCircle className="text-white text-xl" />
               </div>
             )}
           </div>
+
+          {imageFileUrl && (
+            <div className="mt-2 flex items-center justify-center gap-2">
+              <button
+                onClick={() => {
+                  setImageFile(null);
+                  setImageFileUrl(null);
+                }}
+                className="text-sm text-red-400 hover:text-red-300 transition-colors"
+              >
+                Remove photo
+              </button>
+            </div>
+          )}
           <h1 className="mt-4 text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-teal-400">
             {currentUser?.username}
           </h1>
@@ -206,7 +257,7 @@ export default function DashProfile() {
                     >
                       <option value="user">User</option>
                       <option value="vendor">Vendor</option>
-                      <option value="admin">Admin</option>
+                      {/* <option value="admin">Admin</option> */}
                     </Select>
                   </div>
                 </div>

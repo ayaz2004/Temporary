@@ -23,6 +23,7 @@ export default function AddVendor() {
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState(null);
 
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -111,13 +112,15 @@ export default function AddVendor() {
 
     setLoading(true);
     try {
+      const base64Image = imageFile ? await convertToBase64(imageFile) : null;
       const res = await fetch("/api/vendor/addVendor", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, image: base64Image }),
       });
+
       const data = await res.json();
 
       if (!res.ok) {
@@ -131,6 +134,15 @@ export default function AddVendor() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
   };
 
   return (
