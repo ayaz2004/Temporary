@@ -1,7 +1,7 @@
 import express from "express";
 import {
-  getCoordinatesAndTimestamp,
-  test,
+  getAllNearByVandors, getCoordinatesAndTimestamp,
+  notifyUsersForVan, test,
   signout,
 } from "../controllers/user.controller.js";
 
@@ -11,4 +11,6 @@ router.get("/test", test);
 router.post("/signout", signout);
 
 router.get("/coordinates", getCoordinatesAndTimestamp);
+router.post("/notifynearbyvandors", getAllNearByVandors);
+router.post("/notifyusersforvan", notifyUsersForVan);
 export default router;

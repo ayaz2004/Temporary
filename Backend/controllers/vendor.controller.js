@@ -2,7 +2,7 @@ import Vendor from "../models/vendor.model.js";
 import { errorHanler } from "../utils/error.js";
 import ApiResponse from "../utils/ApiRresponse.js";
 import mongoose from "mongoose";
-import { uploadImage } from "../utils/cloudinary.js";
+import {uploadImage} from "../utils/cloudinary.js"
 
 export const addVendor = async (req, res, next) => {
   try {
@@ -15,30 +15,27 @@ export const addVendor = async (req, res, next) => {
       availableTime,
       responseTime,
       price,
-      image,
-      ...otherData
+
     } = req.body;
 
     // Validate required fields
-    if (
-      !name ||
-      !phone ||
-      !address ||
-      !availableTime ||
-      !responseTime ||
-      !price
-    ) {
-      return next(errorHanler(400, "All required fields must be provided"));
-    }
-
-    // let imageUrl = null;
-    // if (image) {
-    //   try {
-    //     imageUrl = await uploadImage(image);
-    //   } catch (error) {
-    //     return next(errorHanler(500, "Image upload failed"));
-    //   }
+    // if (
+    //   !name ||
+    //   !phone ||
+    //   !address ||
+    //   !availableTime ||
+    //   !responseTime ||
+    //   !price
+    // ) {
+    //   return next(errorHanler(400, "All required fields must be provided"));
     // }
+    // const imagePath = req.files?.imageFile[0]?.path;
+  
+    // const imageResponse = await uploadImage(imagePath);
+    // if(!imageResponse){
+    //   return next(errorHanler(500, "Error uploading image"));
+    // }
+
 
     const vendor = new Vendor({
       name,
@@ -49,13 +46,13 @@ export const addVendor = async (req, res, next) => {
       availableTime,
       responseTime,
       price,
-      image: "dsnjsn",
-      ...otherData,
+   
+  
     });
 
-    console.log(vendor);
 
-    const savedVendor = await vendor.save();
+
+    const savedVendor = await vendor.save({validateBeforeSave:false});
 
     console.log(savedVendor);
 

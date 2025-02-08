@@ -9,12 +9,16 @@ import {
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRecycle } from "react-icons/fa";
+import { useSelector,useDispatch } from "react-redux";
 import OAuth from "../components/OAuth";
+import { signInSuccess } from "../redux/user/userSlice";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
     role: "user",
   });
+  const dispatch = useDispatch();
+
   navigator.geolocation.getCurrentPosition( (position) => {
     setFormData({
       ...formData,
@@ -42,6 +46,8 @@ export default function SignUp() {
       if (data.success === false) {
         return setErrorMessage(data.message);
       }
+      console.log(data);
+      dispatch(signInSuccess(data.data));
       setLoading(false);
       if (res.ok) {
         navigate("/sign-in");

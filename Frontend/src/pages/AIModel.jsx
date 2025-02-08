@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button, Spinner } from "flowbite-react";
+import { useSelector } from "react-redux";
 import {
   FaCloudUploadAlt,
   FaRecycle,
@@ -20,12 +21,32 @@ const getMaxConfidencePrediction = (predictions) => {
     return prediction.confidence > max.confidence ? prediction : max;
   }, predictions[0]);
 };
+
+
+const notifyVandors = async (userCoordinates) => {
+  try {
+    const response = await fetch("/api/user/notifynearbyvandors", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      // Sending both userCoordinates and a fixed radius in meters (e.g., 5000 m)
+      body: JSON.stringify({ userCoordinates }),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to notify vendors");
+    }
+    const data = await response.json();
+    console.log("Notified vendors:", data);
+  } catch (error) {
+    console.error("Error notifying vendors:", error);
+  }
+};
+
 const AIModel = () => {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
-
+  const {currentUser} = useSelector((state) => state.user);
   const getMaterialIcon = (type) => {
     const icons = {
       biodegradable: FaLeaf,
@@ -54,13 +75,13 @@ const AIModel = () => {
 
   const handleClassify = async () => {
     if (!image) return;
-
+  
     setLoading(true);
     try {
       const base64Image = await convertToBase64(image);
       const API_KEY = import.meta.env.VITE_ROBOFLOW_API_KEY;
       const MODEL_ENDPOINT = import.meta.env.VITE_MODEL_ENDPOINT;
-
+  
       const response = await fetch(`${MODEL_ENDPOINT}?api_key=${API_KEY}`, {
         method: "POST",
         headers: {
@@ -68,18 +89,25 @@ const AIModel = () => {
         },
         body: base64Image,
       });
-
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+  
       const data = await response.json();
-      setResult(data);
-
-      // Call addProduct after setting the result
-      if (data.predictions && data.predictions.length > 0) {
-        await addProduct(data.predictions);
+      let error = null;
+  
+      if (data.predictions?.length > 0) {
+        const maxPrediction = getMaxConfidencePrediction(data.predictions);
+        if (maxPrediction.class.toLowerCase() === 'electronic') {
+          error = "You cannot throw e-waste in the garbage. Please dispose of it properly.";
+        } else {
+          await addProduct(data.predictions);
+        }
       }
+  
+      setResult({ ...data, error });
+      notifyVandors(currentUser.coordinates);
     } catch (error) {
       console.error("Classification error:", error);
       setResult({ error: "Failed to classify image. Please try again." });
@@ -87,7 +115,6 @@ const AIModel = () => {
       setLoading(false);
     }
   };
-
   const addProduct = async (predictions) => {
     console.log("Inside addProduct");
     const maxConfidencePrediction = getMaxConfidencePrediction(predictions);

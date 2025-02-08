@@ -26,7 +26,7 @@ export const getBrowser = async () => {
         });
 
         // Navigate to the target page
-        await page.goto("https://mcdonline.nic.in/esbm-mcd/citizenMap/getDayCoordinatesII?vehicleRegNo=DL1GC7925&startTime=06:00:00&endTime=21:47:56&date=03-02-2025");
+        await page.goto("https://mcdonline.nic.in/esbm-mcd/citizenMap/getDayCoordinatesII?vehicleRegNo=DL1GC7840&startTime=06:00:00&endTime=14:08:04&date=08-02-2025");
 
         console.log("Page loaded successfully");
 

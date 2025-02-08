@@ -12,10 +12,13 @@ import ProductDetails from "./pages/ProductDetails";
 import VendorDetails from "./pages/VendorDetails";
 import FooterCom from "./components/Footer";
 import AIModel from "./pages/AIModel";
+import { useEffect,useState } from "react";
+
 import PrivateRoute from "./components/PrivateRoute";
 import AddVendor from "./pages/AddVendor";
 
 export default function App() {
+
   return (
     <>
       {/* Leaflet Map */}
