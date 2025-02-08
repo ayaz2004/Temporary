@@ -11,12 +11,15 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signoutSuccess } from "../redux/user/userSlice";
 import { motion } from "framer-motion";
+import { useSelector } from "react-redux";
 
 export default function DashSidebar() {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [tab, setTab] = useState("");
+
+  const { currentUser } = useSelector((state) => state.user);
 
   const sidebarVariants = {
     hidden: { opacity: 0, x: -20 },
@@ -44,7 +47,7 @@ export default function DashSidebar() {
 
   const handleSignout = async () => {
     try {
-      const res = await fetch("/api/auth/signout", {
+      const res = await fetch("/api/user/signout", {
         method: "POST",
         credentials: "include",
       });
@@ -91,6 +94,24 @@ export default function DashSidebar() {
               </Link>
             </motion.div>
 
+            {currentUser?.role === "user" && (
+              <motion.div variants={itemVariants} whileHover="hover">
+                <Link to="/dashboard?tab=add-waste">
+                  <Sidebar.Item
+                    active={tab === "add-waste"}
+                    icon={HiTruck}
+                    className={`${
+                      tab === "waste-collection"
+                        ? "bg-green-500/20 text-green-400 border-r-4 border-green-500"
+                        : "text-gray-300 hover:text-green-500 hover:bg-gray-800/50"
+                    } transition-all duration-200`}
+                    as="div"
+                  >
+                    Add Waste
+                  </Sidebar.Item>
+                </Link>
+              </motion.div>
+            )}
             <motion.div variants={itemVariants} whileHover="hover">
               <Link to="/dashboard?tab=waste-collection">
                 <Sidebar.Item
@@ -107,7 +128,6 @@ export default function DashSidebar() {
                 </Sidebar.Item>
               </Link>
             </motion.div>
-
             <motion.div variants={itemVariants} whileHover="hover">
               <Link to="/dashboard?tab=work-area">
                 <Sidebar.Item
@@ -124,7 +144,6 @@ export default function DashSidebar() {
                 </Sidebar.Item>
               </Link>
             </motion.div>
-
             <motion.div variants={itemVariants} whileHover="hover">
               <Link to="/dashboard?tab=reports">
                 <Sidebar.Item
@@ -141,7 +160,6 @@ export default function DashSidebar() {
                 </Sidebar.Item>
               </Link>
             </motion.div>
-
             <motion.div
               variants={itemVariants}
               whileHover="hover"

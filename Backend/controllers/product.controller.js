@@ -14,7 +14,7 @@ export const addProduct = async (req, res, next) => {
     }
 
     const { category, quantity, price, description, images } = req.body;
-    console.log(req.body)
+    console.log(req.body);
     // Validate required fields
     if (!category || !quantity || !price || !description) {
       return next(errorHanler(400, "All fields are required"));
@@ -80,6 +80,28 @@ export const getAllProducts = async (req, res, next) => {
       message: "All products fetched successfully",
       products,
     });
+  } catch (error) {
+    next(errorHanler(500, error.message));
+  }
+};
+
+export const getUserProducts = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+
+    // Validate userId format
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return next(errorHanler(400, "Invalid user ID format"));
+    }
+
+    // Find all products with the given userId
+    const products = await Product.find({ userId });
+
+    res
+      .status(200)
+      .json(
+        new ApiResponse(200, "User products fetched successfully", products)
+      );
   } catch (error) {
     next(errorHanler(500, error.message));
   }

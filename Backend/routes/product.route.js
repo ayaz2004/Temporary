@@ -3,6 +3,7 @@ import {
   addProduct,
   getAllProducts,
   getProduct,
+  getUserProducts,
 } from "../controllers/product.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 const router = Router();
@@ -14,5 +15,6 @@ router.post(
 
 router.get("/getProduct/:productId", getProduct); // Route to get a specific product by pruductId
 router.get("/getAllProducts", getAllProducts); // Route to get all products
+router.get("/user/:userId", getUserProducts);
 
 export default router;
